@@ -40,7 +40,6 @@ class Program
                     break;
                 }
             }
-
             if (currentUserIndex == -1)
             {
                 Console.WriteLine("Felaktigt användarnamn eller lösenord, försök igen!");
