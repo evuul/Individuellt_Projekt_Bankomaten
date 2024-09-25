@@ -38,32 +38,21 @@ class Program
         while (loggedIn)
         {
             Console.WriteLine("Välj ett alternativ:");
-            Console.WriteLine("1. Saldo");
-            Console.WriteLine("2. Uttag");
-            Console.WriteLine("3. Insättning");
-            Console.WriteLine("4. Avsluta");
+            Console.WriteLine("1. Saldo & konton");
+            Console.WriteLine("2. Överföring mellan konton");
+            Console.WriteLine("3. Insättning & uttag");
+            Console.WriteLine("4. Logga ut");
             int choice = int.Parse(Console.ReadLine());
             switch (choice)
             {
                 case 1:
-                    Console.WriteLine("Ditt saldo är 1000kr");
+                    // metod för att se saldo och konton
                     break;
                 case 2:
-                    Console.WriteLine("Hur mycket vill du ta ut?");
-                    int withdraw = int.Parse(Console.ReadLine());
-                    if (withdraw > 1000)
-                    {
-                        Console.WriteLine("Du har inte tillräckligt med pengar på kontot");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Du har tagit ut {withdraw}kr");
-                    }
+                    // metod för att överföra pengar mellan konton
                     break;
                 case 3:
-                    Console.WriteLine("Hur mycket vill du sätta in?");
-                    int deposit = int.Parse(Console.ReadLine());
-                    Console.WriteLine($"Du har satt in {deposit}kr");
+                    // metod för att sätta in och ta ut pengar
                     break;
                 case 4:
                     Console.WriteLine("Tack för att du använde bankomaten!");
