@@ -9,18 +9,19 @@ class Program
         string[,] accounts =
         {
             { "Sparkonto", "Lönekonto", "Kreditkort" },
-            { "Sparkonto", "Lönekonto", "Kreditkort" },
-            { "Sparkonto", "Lönekonto", "Kreditkort" }
+            { "Sparkonto", "Matkonto", "Aktiekonto" },
+            { "Gemensamt konto", "Autogirokonto", "Kreditkort" }
         };
         decimal[,] accountBalances =
         {
-            { 10000m, 5000m, -1000m },
-            { 20000m, 10000m, -2000m },
-            { 30000m, 15000m, -3000m }
+            { 100000m, 500000m, -1000m },
+            { 450000m, 90000m, 802000m },
+            { 30000m, 15000m, -3500m }
         };
         string username = "";
         string password = "";
         int currentUserIndex = -1; // för att se vilken användare som är inloggad 
+        int attempts = 0;
         bool isRunning = true;
         while (isRunning)
         {
@@ -42,7 +43,13 @@ class Program
             }
             if (currentUserIndex == -1)
             {
+                attempts++;
                 Console.WriteLine("Felaktigt användarnamn eller lösenord, försök igen!");
+                if (attempts >= 3) 
+                {
+                    Console.WriteLine("För många felaktiga inloggningsförsök, försök igen senare!");
+                    return;
+                }
             }
         }
 
