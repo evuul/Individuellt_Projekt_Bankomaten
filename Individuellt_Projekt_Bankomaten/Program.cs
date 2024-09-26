@@ -4,19 +4,23 @@ class Program
 {
     static void Main(string[] args)
     {
-        string[] usernames = { "Alexander", "Karin", "Johan" };
-        string[] passwords = { "1234", "1111", "2222" };
+        string[] usernames = { "Alexander", "Karin", "Johan", "Fredrik", "Lisa" };
+        string[] passwords = { "1234", "1111", "2222", "3333", "4444" };
         string[,] accounts =
         {
-            { "Sparkonto", "Lönekonto", "Kreditkort" },
-            { "Sparkonto", "Matkonto", "Aktiekonto" },
-            { "Gemensamt konto", "Autogirokonto", "Kreditkort" }
+            { "Sparkonto", "Lönekonto", "Kreditkort", "Resekonto"},
+            { "Sparkonto", "Matkonto", "Aktiekonto", "Filmkonto"},
+            { "Gemensamt konto", "Autogirokonto", "Kreditkort", "E-sparkonto"},
+            { "Godiskonto", "Autogirokonto", "Kreditkort", "Avanza"},
+            { "Hundkonto", "Sparkonto PC", "Veterinärkostnader", "Nöjes konto"}
         };
         decimal[,] accountBalances =
         {
-            { 100000m, 500000m, -1000m },
-            { 450000m, 90000m, 802000m },
-            { 30000m, 15000m, -3500m }
+            { 100000m, 500000.69m, -1000m, 20000m },
+            { 200000m, 10000m, 50000m, 1000m },
+            { 1000000m, 50000m, -5000m, 100000m },
+            { 4500m, 90000m, 9999999m, 5000.86m },
+            { 3000m, 10000m, 3500m, 2000m }
         };
         string username = "";
         string password = "";
