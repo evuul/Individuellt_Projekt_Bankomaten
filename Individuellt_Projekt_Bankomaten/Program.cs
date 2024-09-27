@@ -98,7 +98,7 @@ class Program
             Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
             for (int i = 0; i < accounts.GetLength(1); i++)
             {
-                Console.WriteLine($"{accounts[userIndex, i]}: {accountBalances[userIndex, i]} kr");
+                Console.WriteLine($"{accounts[userIndex, i]}: {accountBalances[userIndex, i].ToString("C")}");
             }
         }
     }
