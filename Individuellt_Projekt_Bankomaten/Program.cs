@@ -30,8 +30,9 @@ class Program
         {
             Showmeny(accounts, accountBalances, currentUserIndex, usernames);
         }
-
-        static int Login(string[] usernames, string[] passwords)
+        
+    }
+    static int Login(string[] usernames, string[] passwords)
         {
             int attempts = 0;
             while (attempts < 3)
@@ -240,5 +241,4 @@ class Program
                 Console.ReadKey();
             }
         }
-    }
 }
