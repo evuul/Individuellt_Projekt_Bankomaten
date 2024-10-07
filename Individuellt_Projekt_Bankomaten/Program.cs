@@ -8,11 +8,11 @@ class Program
         string[] passwords = { "1234", "1111", "2222", "3333", "4444" };
         string[,] accounts =
         {
-            { "Sparkonto", "Lönekonto", "Kreditkort", "Resekonto"},
-            { "Sparkonto", "Matkonto", "Aktiekonto", "Filmkonto"},
-            { "Gemensamt konto", "Autogirokonto", "Kreditkort", "E-sparkonto"},
-            { "Godiskonto", "Autogirokonto", "Kreditkort", "Avanza"},
-            { "Hundkonto", "Sparkonto PC", "Veterinärkostnader", "Nöjes konto"}
+            { "Sparkonto", "Lönekonto", "Kreditkort", "Resekonto" },
+            { "Sparkonto", "Matkonto", "Aktiekonto", "Filmkonto" },
+            { "Gemensamt konto", "Autogirokonto", "Kreditkort", "E-sparkonto" },
+            { "Godiskonto", "Autogirokonto", "Kreditkort", "Avanza" },
+            { "Hundkonto", "Sparkonto PC", "Veterinärkostnader", "Nöjes konto" }
         };
         decimal[,] accountBalances =
         {
@@ -45,11 +45,12 @@ class Program
                     break;
                 }
             }
+
             if (currentUserIndex == -1)
             {
                 attempts++;
                 Console.WriteLine("Felaktigt användarnamn eller lösenord, försök igen!");
-                if (attempts >= 3) 
+                if (attempts >= 3)
                 {
                     Console.WriteLine("För många felaktiga inloggningsförsök, försök igen senare!");
                     return;
@@ -73,10 +74,10 @@ class Program
                         ShowAccounts(accounts, accountBalances, currentUserIndex, usernames);
                         break;
                     case 2:
-                        TransferMoney(accounts, accountBalances,currentUserIndex);
+                        TransferMoney(accounts, accountBalances, currentUserIndex);
                         break;
                     case 3:
-                        // metod för att sätta in och ta ut pengar
+                        DepositWithdrawMoney(accounts, accountBalances, currentUserIndex);
                         break;
                     case 4:
                         Console.WriteLine("Tack för att du använde bankomaten!");
@@ -93,67 +94,134 @@ class Program
             }
         }
     }
+
     static void ShowAccounts(string[,] accounts, decimal[,] accountBalances, int userIndex, string[] usernames)
+    {
+        Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
+        for (int i = 0; i < accounts.GetLength(1); i++)
         {
-            Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
-            for (int i = 0; i < accounts.GetLength(1); i++)
-            {
-                Console.WriteLine($"{accounts[userIndex, i]}: {accountBalances[userIndex, i].ToString("C")}");
-            }
+            Console.WriteLine($"{accounts[userIndex, i]}: {accountBalances[userIndex, i].ToString("C")}");
+        }
+    }
+
+    static void TransferMoney(string[,] accounts, decimal[,] accountBalances, int userIndex)
+    {
+        Console.WriteLine("Vilket konto vill du överföra pengar från?");
+        for (int i = 0; i < accounts.GetLength(1); i++)
+        {
+            Console.WriteLine($"{i + 1}. {accounts[userIndex, i]} - Saldo: {accountBalances[userIndex, i]:C}");
         }
 
-        static void TransferMoney(string[,] accounts, decimal[,] accountBalances, int userIndex)
+
+        if (!int.TryParse(Console.ReadLine(), out int fromAccount) || fromAccount < 1 ||
+            fromAccount > accounts.GetLength(1))
         {
-            Console.WriteLine("Vilket konto vill du överföra pengar från?");
-            for (int i = 0; i < accounts.GetLength(1); i++)
+            Console.WriteLine("Ogiltigt val, försök igen.");
+            return;
+        }
+
+        fromAccount--;
+
+        Console.WriteLine("Vilket konto vill du överföra pengar till?");
+        for (int i = 0; i < accounts.GetLength(1); i++)
+        {
+            if (i != fromAccount)
             {
                 Console.WriteLine($"{i + 1}. {accounts[userIndex, i]} - Saldo: {accountBalances[userIndex, i]:C}");
             }
+        }
 
-            
-            if (!int.TryParse(Console.ReadLine(), out int fromAccount) || fromAccount < 1 || fromAccount > accounts.GetLength(1))
-            {
-                Console.WriteLine("Ogiltigt val, försök igen.");
-                return;
-            }
-            
-            fromAccount--;
+        if (!int.TryParse(Console.ReadLine(), out int toAccount) || toAccount < 1 ||
+            toAccount > accounts.GetLength(1) || toAccount == fromAccount + 1)
+        {
+            Console.WriteLine("Ogiltigt val, försök igen.");
+            return;
+        }
 
-            Console.WriteLine("Vilket konto vill du överföra pengar till?");
-            for (int i = 0; i < accounts.GetLength(1); i++)
-            {
-                if (i != fromAccount) 
-                {
-                    Console.WriteLine($"{i + 1}. {accounts[userIndex, i]} - Saldo: {accountBalances[userIndex, i]:C}");
-                }
-            }
-            
-            if (!int.TryParse(Console.ReadLine(), out int toAccount) || toAccount < 1 || toAccount > accounts.GetLength(1) || toAccount == fromAccount + 1)
-            {
-                Console.WriteLine("Ogiltigt val, försök igen.");
-                return;
-            }
+        toAccount--;
 
-            toAccount--; 
-            
-            Console.WriteLine($"Hur mycket pengar vill du överföra från {accounts[userIndex, fromAccount]} till {accounts[userIndex, toAccount]}?");
+        Console.WriteLine(
+            $"Hur mycket pengar vill du överföra från {accounts[userIndex, fromAccount]} till {accounts[userIndex, toAccount]}?");
+        if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)
+        {
+            Console.WriteLine("Ogiltigt belopp, försök igen.");
+            return;
+        }
+
+        if (accountBalances[userIndex, fromAccount] < amount)
+        {
+            Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra överföringen.");
+            return;
+        }
+
+        accountBalances[userIndex, fromAccount] -= amount;
+        accountBalances[userIndex, toAccount] += amount;
+
+        Console.WriteLine(
+            $"Överföringen lyckades! {amount:C} har överförts från {accounts[userIndex, fromAccount]} till {accounts[userIndex, toAccount]}.");
+        Console.WriteLine(
+            $"Nytt saldo för {accounts[userIndex, fromAccount]}: {accountBalances[userIndex, fromAccount]:C}");
+        Console.WriteLine(
+            $"Nytt saldo för {accounts[userIndex, toAccount]}: {accountBalances[userIndex, toAccount]:C}");
+    }
+
+    static void DepositWithdrawMoney(string[,] accounts, decimal[,] accountBalances, int userIndex)
+    {
+        Console.WriteLine("Vilket konto vill du sätta in eller ta ut pengar från?");
+        for (int i = 0; i < accounts.GetLength(1); i++)
+        {
+            Console.WriteLine($"{i + 1}. {accounts[userIndex, i]} - Saldo: {accountBalances[userIndex, i]:C}");
+        }
+
+        if (!int.TryParse(Console.ReadLine(), out int account) || account < 1 || account > accounts.GetLength(1))
+        {
+            Console.WriteLine("Ogiltigt val, försök igen.");
+            return;
+        }
+
+        account--;
+
+        Console.WriteLine("Vill du sätta in eller ta ut pengar?");
+        Console.WriteLine("1. Sätta in pengar");
+        Console.WriteLine("2. Ta ut pengar");
+        if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 2)
+        {
+            Console.WriteLine("Ogiltigt val, försök igen.");
+            return;
+        }
+
+        if (choice == 1)
+        {
+            Console.WriteLine("Hur mycket pengar vill du sätta in?");
             if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)
             {
                 Console.WriteLine("Ogiltigt belopp, försök igen.");
                 return;
             }
-            
-            if (accountBalances[userIndex, fromAccount] < amount)
+
+            accountBalances[userIndex, account] += amount;
+            Console.WriteLine($"{amount:C} har satts in på {accounts[userIndex, account]}.");
+            Console.WriteLine(
+                $"Nytt saldo för {accounts[userIndex, account]}: {accountBalances[userIndex, account]:C}");
+        }
+        else
+        {
+            Console.WriteLine("Hur mycket pengar vill du ta ut?");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)
             {
-                Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra överföringen.");
+                Console.WriteLine("Ogiltigt belopp, försök igen.");
                 return;
             }
-            
-            accountBalances[userIndex, fromAccount] -= amount;
-            accountBalances[userIndex, toAccount] += amount;
 
-            Console.WriteLine($"Överföringen lyckades! {amount:C} har överförts från {accounts[userIndex, fromAccount]} till {accounts[userIndex, toAccount]}.");
-            Console.WriteLine($"Nytt saldo för {accounts[userIndex, fromAccount]}: {accountBalances[userIndex, fromAccount]:C}");
-            Console.WriteLine($"Nytt saldo för {accounts[userIndex, toAccount]}: {accountBalances[userIndex, toAccount]:C}");
+            if (accountBalances[userIndex, account] < amount)
+            {
+                Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra uttaget.");
+                return;
+            }
+
+            accountBalances[userIndex, account] -= amount;
+            Console.WriteLine($"{amount:C} har tagits ut från {accounts[userIndex, account]}.");
+            Console.WriteLine($"Nytt saldo för {accounts[userIndex, account]}: {accountBalances[userIndex, account]:C}");
         }
+    }
 }
