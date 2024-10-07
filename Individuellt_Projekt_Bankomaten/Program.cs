@@ -60,10 +60,19 @@ class Program
                 }
             }
         }
-
-        bool loggedIn = true;
-        while (loggedIn) 
         {
+            Showmeny(accounts, accountBalances, currentUserIndex, usernames);
+        }
+    }
+
+    static void Showmeny(string [][] accounts, decimal[][] accountBalances, int currentUserIndex, string[] usernames)
+    {
+        bool loggedIn = true;
+        while (loggedIn)
+        {
+            Console.Clear();
+            Console.WriteLine($"Välkommen {usernames[currentUserIndex]}!");
+            Console.WriteLine("Vad vill du göra idag?");
             Console.WriteLine("Välj ett alternativ:");
             Console.WriteLine("1. Saldo & konton");
             Console.WriteLine("2. Överföring mellan konton");
@@ -97,7 +106,6 @@ class Program
             }
         }
     }
-
     static void ShowAccounts(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] usernames)
     {
         Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
