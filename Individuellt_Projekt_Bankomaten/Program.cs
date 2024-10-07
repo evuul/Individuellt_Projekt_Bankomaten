@@ -92,8 +92,8 @@ class Program
                 Console.WriteLine("Felaktigt val, försök igen!");
             }
         }
-
-        static void ShowAccounts(string[,] accounts, decimal[,] accountBalances, int userIndex, string[] usernames)
+    }
+    static void ShowAccounts(string[,] accounts, decimal[,] accountBalances, int userIndex, string[] usernames)
         {
             Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
             for (int i = 0; i < accounts.GetLength(1); i++)
@@ -156,5 +156,4 @@ class Program
             Console.WriteLine($"Nytt saldo för {accounts[userIndex, fromAccount]}: {accountBalances[userIndex, fromAccount]:C}");
             Console.WriteLine($"Nytt saldo för {accounts[userIndex, toAccount]}: {accountBalances[userIndex, toAccount]:C}");
         }
-    }
 }
