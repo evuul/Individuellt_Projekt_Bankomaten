@@ -62,7 +62,7 @@ class Program
         }
 
         bool loggedIn = true;
-        while (loggedIn && currentUserIndex != -1)
+        while (loggedIn) 
         {
             Console.WriteLine("Välj ett alternativ:");
             Console.WriteLine("1. Saldo & konton");
