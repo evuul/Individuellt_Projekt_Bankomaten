@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Individuellt_Projekt_Bankomaten")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39321b2ac1e9ecb59afd65addbc5d134949a19b0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1e42d76f211c9cf52fff8fdb5364f8e5fc940fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("Individuellt_Projekt_Bankomaten")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Individuellt_Projekt_Bankomaten")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
