@@ -28,7 +28,7 @@ class Program
         int currentUserIndex = Login(usernames, passwords);
         if (currentUserIndex != -1)
         {
-            Showmeny(accounts, accountBalances, currentUserIndex, usernames);
+            Showmeny(accounts, accountBalances, currentUserIndex, usernames, passwords);
         }
     }
     // methods
@@ -57,7 +57,7 @@ class Program
         return -1;
     }
 
-    static void Showmeny(string[][] accounts, decimal[][] accountBalances, int currentUserIndex, string[] usernames)
+    static void Showmeny(string[][] accounts, decimal[][] accountBalances, int currentUserIndex, string[] usernames, string[] passwords)
     {
         bool loggedIn = true;
         while (loggedIn)
@@ -80,7 +80,7 @@ class Program
                         TransferMoney(accounts, accountBalances, currentUserIndex);
                         break;
                     case 3:
-                        DepositWithdrawMoney(accounts, accountBalances, currentUserIndex);
+                        DepositWithdrawMoney(accounts, accountBalances, currentUserIndex, passwords);
                         break;
                     case 4:
                         Console.WriteLine("Tack för att du använde bankomaten!");
@@ -117,8 +117,7 @@ class Program
         {
             Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}");
         }
-
-
+        
         if (!int.TryParse(Console.ReadLine(), out int fromAccount) || fromAccount < 1 ||
             fromAccount > accounts[userIndex].Length)
         {
@@ -173,7 +172,7 @@ class Program
         Console.ReadKey();
     }
 
-    static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalances, int userIndex)
+    static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] passwords)
     {
         Console.WriteLine("Vilket konto vill du sätta in eller ta ut pengar från?");
         for (int i = 0; i < accounts[userIndex].Length; i++)
@@ -231,11 +230,47 @@ class Program
                 return;
             }
 
+            if (!VerifyPassword(passwords, userIndex)) // calls my method to verify the password
+            {
+                return; // if the password is incorrect, the user can't withdraw money
+            }
             accountBalances[userIndex][account] -= amount;
             Console.WriteLine($"{amount:C} har tagits ut från {accounts[userIndex][account]}.");
             Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
             Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
             Console.ReadKey();
         }
+    }
+
+    static bool VerifyPassword(string[] passwords, int userIndex)
+    {
+        Console.WriteLine("Verifiera ditt uttag med din pinkod:");
+        int attempts = 0;
+        bool isPinCorrect = false;
+
+        while (attempts < 3 && !isPinCorrect)
+        {
+            string password = Console.ReadLine();
+            if (password == passwords[userIndex])
+            {
+                isPinCorrect = true; // if the password is correct, the user can withdraw money
+            }
+            else
+            {
+                attempts++;
+                if (attempts < 3)
+                {
+                    Console.WriteLine("Felaktig pinkod, försök igen.");
+                }
+            }
+        }
+
+        if (!isPinCorrect)
+        {
+            Console.WriteLine("För många felaktiga försök. Åtgärden har avbrutits.");
+            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+            Console.ReadKey();
+        }
+        return isPinCorrect;
     }
 }
