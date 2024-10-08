@@ -24,11 +24,15 @@ class Program
             new decimal[] { 4500m, 90000m, 5000.85m}, // Fredrik
             new decimal[] { 3000m, 2000m } // Lisa
         };
-
-        int currentUserIndex = Login(usernames, passwords);
-        if (currentUserIndex != -1)
+        bool exit = false;
+        while (!exit) // Will loop until program is shutdown
         {
-            Showmeny(accounts, accountBalances, currentUserIndex, usernames, passwords);
+            Console.Clear();
+            int currentUserIndex = Login(usernames, passwords);
+            if (currentUserIndex != -1)
+            {
+                Showmeny(accounts, accountBalances, currentUserIndex, usernames, passwords);
+            }
         }
     }
     // methods
