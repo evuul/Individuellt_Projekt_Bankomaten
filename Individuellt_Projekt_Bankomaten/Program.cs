@@ -25,7 +25,7 @@ class Program
             new decimal[] { 3000m, 2000m } // Lisa
         };
         bool exit = false;
-        while (!exit) // Will loop until program is shutdown
+        while (!exit) // Will loop until program is shutdown by user
         {
             Console.Clear();
             int currentUserIndex = Login(usernames, passwords);
