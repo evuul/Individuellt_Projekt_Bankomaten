@@ -32,14 +32,14 @@ class Program
         {
             Console.Clear(); // clears the console before a new login
             int currentUserIndex = Login(usernames, passwords); // calls my method to login
-            if (currentUserIndex != -1) // if login is sucessful show menu
+            if (currentUserIndex != -1) // if login is successful show menu
             {
                 ShowMenu(accounts, accountBalances, currentUserIndex, usernames, passwords);
             }
             else
             {
                 Console.WriteLine("\nDu har anget fel login information 3 gånger, programmet avslutas av säkerhetsskäl!");
-                exit = true; // if login is not sucessful after 3 attempts, exit the program
+                exit = true; // if login is not successful after 3 attempts, exit the program
             }
         }
     }
@@ -75,7 +75,7 @@ class Program
         while (loggedIn) // loops until the user logs out
         {
             Console.Clear();
-            Console.WriteLine($"Inloggningen lyckades! \nVälkommen {usernames[currentUserIndex]}!");
+            Console.WriteLine($"Välkommen {usernames[currentUserIndex]}!");
             Console.WriteLine("Välj ett alternativ:");
             Console.WriteLine("1. Saldo & konton");
             Console.WriteLine("2. Överföring mellan konton");
@@ -109,8 +109,7 @@ class Program
             }
         }
     }
-    // method to show the accounts and balances
-    static void ShowAccounts(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] usernames)
+    static void ShowAccounts(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] usernames) // method to show the accounts and balances
     {
         Console.WriteLine($"Konton och saldo för {usernames[userIndex]}:");
         for (int i = 0; i < accounts[userIndex].Length; i++) // loops through and shows the accounts and balances
@@ -124,58 +123,61 @@ class Program
 
     static void TransferMoney(string[][] accounts, decimal[][] accountBalances, int userIndex) // method to transfer money between accounts
     {
+        int fromAccount; 
+        int toAccount;
+        decimal amount;
+        
         Console.WriteLine("Vilket konto vill du överföra pengar från?");
-        for (int i = 0; i < accounts[userIndex].Length; i++) // loops through and shows the accounts
+        for (int i = 0; i < accounts[userIndex].Length; i++) // loop through the accounts and show them
         {
             Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}");
         }
         
-        if (!int.TryParse(Console.ReadLine(), out int fromAccount) || fromAccount < 1 || fromAccount > accounts[userIndex].Length) // reads input and checks if it's an integer
+        string input = Console.ReadLine();
+        while (!int.TryParse(input, out fromAccount) || fromAccount < 1 || fromAccount > accounts[userIndex].Length) // loop until the user enters a valid account number
         {
-            Console.WriteLine("Ogiltigt val, försök igen.");
-            return;
+            Console.WriteLine("Ogiltigt val. Försök igen.");
+            input = Console.ReadLine(); 
         }
-
         fromAccount--; // subtracts 1 from the input to get the correct index
 
-        Console.WriteLine("Vilket konto vill du överföra pengar till?");
-        for (int i = 0; i < accounts[userIndex].Length; i++) // loops through and shows the accounts
+        Console.WriteLine("Vilket konto vill du överföra pengar till?"); 
+        for (int i = 0; i < accounts[userIndex].Length; i++) // loop through the accounts and show them
         {
-            if (i != fromAccount) // if the account is not the same as the from account
+            if (i != fromAccount)
             {
-                Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}"); 
+                Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}");
             }
         }
-
-        if (!int.TryParse(Console.ReadLine(), out int toAccount) || toAccount < 1 || toAccount > accounts[userIndex].Length || toAccount == fromAccount + 1) // reads the input and checks if it's an integer
+        
+        input = Console.ReadLine();
+        while (!int.TryParse(input, out toAccount) || toAccount < 1 || toAccount > accounts[userIndex].Length || toAccount == fromAccount + 1) // loop until the user enters a valid account number
         {
-            Console.WriteLine("Ogiltigt val, försök igen.");
-            return; // if the input is invalid, return
+            Console.WriteLine("Ogiltigt val. Du kan inte välja samma konto att överföra pengar till. Försök igen.");
+            input = Console.ReadLine();
         }
-
         toAccount--; // subtracts 1 from the input to get the correct index
-
-        Console.WriteLine($"Hur mycket pengar vill du överföra från {accounts[userIndex][fromAccount]} till {accounts[userIndex][toAccount]}?"); // asks how much money they want to transfer
-        if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0) 
+        
+        Console.WriteLine($"Hur mycket pengar vill du överföra från {accounts[userIndex][fromAccount]} till {accounts[userIndex][toAccount]}?");
+        input = Console.ReadLine();
+        
+        while (!decimal.TryParse(input, out amount) || amount <= 0) // loop until the user enters a valid amount
         {
-            Console.WriteLine("Ogiltigt belopp, försök igen.");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
-            Console.ReadKey();
-            return;
+            Console.WriteLine("Ogiltigt belopp. Försök igen.");
+            input = Console.ReadLine();
         }
-
-        if (accountBalances[userIndex][fromAccount] < amount) // checks if the user has enough money to transfer
+        
+        if (accountBalances[userIndex][fromAccount] < amount) // Check if the user has enough balance for the transfer
         {
             Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra överföringen.");
             Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
             Console.ReadKey();
             return;
         }
-
-        accountBalances[userIndex][fromAccount] -= amount; // subtracts the amount from the from account
-        accountBalances[userIndex][toAccount] += amount; // adds the amount to the to account
         
-        // shows the result after the transfer
+        accountBalances[userIndex][fromAccount] -= amount;
+        accountBalances[userIndex][toAccount] += amount;
+
         Console.WriteLine($"Överföringen lyckades! {amount:C} har överförts från {accounts[userIndex][fromAccount]} till {accounts[userIndex][toAccount]}.");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][fromAccount]}: {accountBalances[userIndex][fromAccount]:C}");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][toAccount]}: {accountBalances[userIndex][toAccount]:C}");
@@ -183,74 +185,86 @@ class Program
         Console.ReadKey();
     }
 
-    static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] passwords) // method to deposit and withdraw money
+static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] passwords) // method to deposit and withdraw money
+{
+    int account;
+    
+    Console.WriteLine("Vilket konto vill du sätta in eller ta ut pengar från?");
+    for (int i = 0; i < accounts[userIndex].Length; i++)
     {
-        Console.WriteLine("Vilket konto vill du sätta in eller ta ut pengar från?");
-        for (int i = 0; i < accounts[userIndex].Length; i++) // loops through and shows the accounts
-        {
-            Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}");
-        }
-
-        if (!int.TryParse(Console.ReadLine(), out int account) || account < 1 || account > accounts[userIndex].Length) // check input from user
-        {
-            Console.WriteLine("Ogiltigt val, försök igen.");
-            return;
-        }
-
-        account--; // subtracts 1 from the input to get the correct index
-
-        Console.WriteLine("Vill du sätta in eller ta ut pengar?");
-        Console.WriteLine("1. Sätta in pengar");
-        Console.WriteLine("2. Ta ut pengar");
-        if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 2) // reads the input and checks if it's an integer
-        {
-            Console.WriteLine("Ogiltigt val, försök igen.");
-            return;
-        }
-
-        if (choice == 1)
-        {
-            Console.WriteLine("Hur mycket pengar vill du sätta in?");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)  // checks if it is a valid amount
-            {
-                Console.WriteLine("Ogiltigt belopp, försök igen.");
-                return;
-            }
-
-            accountBalances[userIndex][account] += amount; // adds the amount to the account
-            Console.WriteLine($"{amount:C} har satts in på {accounts[userIndex][account]}.");
-            Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
-            Console.ReadKey();
-        }
-        else
-        {
-            Console.WriteLine("Hur mycket pengar vill du ta ut?");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal amount) || amount <= 0)  // checks if it is a valid amount
-            {
-                Console.WriteLine("Ogiltigt belopp, försök igen.");
-                return;
-            }
-
-            if (accountBalances[userIndex][account] < amount) // checks so that the user have enough money on the account
-            {
-                Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra uttaget.");
-                Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
-                Console.ReadKey();
-                return;
-            }
-
-            if (!VerifyPassword(passwords, userIndex)) // calls my method to verify the password
-            {
-                return; // if the password is incorrect, the user can't withdraw money
-            }
-            accountBalances[userIndex][account] -= amount; // subtracts the amount from the account
-            Console.WriteLine($"{amount:C} har tagits ut från {accounts[userIndex][account]}.");
-            Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
-            Console.ReadKey();
-        }
+        Console.WriteLine($"{i + 1}. {accounts[userIndex][i]} - Saldo: {accountBalances[userIndex][i]:C}");
     }
+    
+    string input = Console.ReadLine();
+    while (!int.TryParse(input, out account) || account < 1 || account > accounts[userIndex].Length) // loop until the user enters a valid account number
+    {
+        Console.WriteLine("Ogiltigt val. Försök igen.");
+        input = Console.ReadLine();
+    }
+    account--; // subtracts 1 from the input to get the correct index
+    
+    Console.WriteLine("Vill du sätta in eller ta ut pengar?");
+    Console.WriteLine("1. Sätta in pengar");
+    Console.WriteLine("2. Ta ut pengar");
+    int choice;
+    
+    input = Console.ReadLine();
+    while (!int.TryParse(input, out choice) || choice < 1 || choice > 2) // loop until the user enters a valid choice
+    {
+        Console.WriteLine("Ogiltigt val. Försök igen.");
+        input = Console.ReadLine();
+    }
+
+    if (choice == 1)
+    {
+        decimal amount;
+        Console.WriteLine("Hur mycket pengar vill du sätta in?");
+        
+        input = Console.ReadLine();
+        while (!decimal.TryParse(input, out amount) || amount <= 0) // loop until the user enters a valid amount
+        {
+            Console.WriteLine("Ogiltigt belopp. Försök igen.");
+            input = Console.ReadLine();
+        }
+        
+        accountBalances[userIndex][account] += amount; // add amount to account
+        Console.WriteLine($"{amount:C} har satts in på {accounts[userIndex][account]}.");
+        Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
+        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.ReadKey();
+    }
+    else if (choice == 2) 
+    {
+        decimal amount;
+        Console.WriteLine("Hur mycket pengar vill du ta ut?");
+        
+        input = Console.ReadLine();
+        while (!decimal.TryParse(input, out amount) || amount <= 0) // loop until the user enters a valid amount
+        {
+            Console.WriteLine("Ogiltigt belopp. Försök igen.");
+            input = Console.ReadLine();
+        }
+        
+        if (accountBalances[userIndex][account] < amount) // Check if the user has enough balance for the withdrawal
+        {
+            Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra uttaget.");
+            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+            Console.ReadKey();
+            return;
+        }
+        
+        if (!VerifyPassword(passwords, userIndex)) // Verify the password
+        {
+            return;
+        }
+        
+        accountBalances[userIndex][account] -= amount; // Withdraw money
+        Console.WriteLine($"{amount:C} har tagits ut från {accounts[userIndex][account]}.");
+        Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
+        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.ReadKey();
+    }
+}
 
     static bool VerifyPassword(string[] passwords, int userIndex) // method to verify the password
     {
@@ -267,7 +281,7 @@ class Program
             }
             else
             {
-                attempts++;
+                attempts++; // if the password is incorrect increase the attempts by 1
                 if (attempts < 3) 
                 {
                     Console.WriteLine("Felaktig pinkod, försök igen.");
