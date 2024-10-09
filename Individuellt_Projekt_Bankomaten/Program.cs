@@ -38,7 +38,7 @@ class Program
             }
             else
             {
-                Console.WriteLine("\nDu har anget fel login information 3 gånger, programmet avslutas av säkerhetsskäl!");
+                Console.WriteLine("\nDu har anget fel information 3 gånger. Programmet avslutas av säkerhetsskäl!");
                 exit = true; // if login is not successful after 3 attempts, exit the program
             }
         }
@@ -54,7 +54,7 @@ class Program
             Console.Write("Användarnamn:");
             string username = Console.ReadLine();
             Console.Write("Lösenord:");
-            string password = Console.ReadLine();
+            string password = ReadPassword(); // calls my method to read the password without showing it on the console
 
             for (int i = 0; i < usernames.Length; i++) // loop through the usernames and passwords to verify the login
             {
@@ -117,7 +117,7 @@ class Program
             Console.WriteLine($"{accounts[userIndex][i]}: {accountBalances[userIndex][i].ToString("C")}");
         }
 
-        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.WriteLine("\nTryck på enter för att återgå till menyval");
         Console.ReadKey();
     }
 
@@ -170,7 +170,7 @@ class Program
         if (accountBalances[userIndex][fromAccount] < amount) // Check if the user has enough balance for the transfer
         {
             Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra överföringen.");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+            Console.WriteLine("\nTryck på enter för att återgå till menyval");
             Console.ReadKey();
             return;
         }
@@ -181,7 +181,7 @@ class Program
         Console.WriteLine($"Överföringen lyckades! {amount:C} har överförts från {accounts[userIndex][fromAccount]} till {accounts[userIndex][toAccount]}.");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][fromAccount]}: {accountBalances[userIndex][fromAccount]:C}");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][toAccount]}: {accountBalances[userIndex][toAccount]:C}");
-        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.WriteLine("\nTryck på enter för att återgå till menyval");
         Console.ReadKey();
     }
 
@@ -230,7 +230,7 @@ static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalance
         accountBalances[userIndex][account] += amount; // add amount to account
         Console.WriteLine($"{amount:C} har satts in på {accounts[userIndex][account]}.");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
-        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.WriteLine("\nTryck på enter för att återgå till menyval");
         Console.ReadKey();
     }
     else if (choice == 2) 
@@ -248,7 +248,7 @@ static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalance
         if (accountBalances[userIndex][account] < amount) // Check if the user has enough balance for the withdrawal
         {
             Console.WriteLine("Du har inte tillräckligt med pengar på kontot för att genomföra uttaget.");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+            Console.WriteLine("\nTryck på enter för att återgå till menyval");
             Console.ReadKey();
             return;
         }
@@ -261,7 +261,7 @@ static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalance
         accountBalances[userIndex][account] -= amount; // Withdraw money
         Console.WriteLine($"{amount:C} har tagits ut från {accounts[userIndex][account]}.");
         Console.WriteLine($"Nytt saldo för {accounts[userIndex][account]}: {accountBalances[userIndex][account]:C}");
-        Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+        Console.WriteLine("\nTryck på enter för att återgå till menyval");
         Console.ReadKey();
     }
 }
@@ -274,7 +274,7 @@ static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalance
 
         while (attempts < 3 && !isPinCorrect) // loops until the user has entered the correct password or has tried 3 times
         {
-            string password = Console.ReadLine();
+            string password = ReadPassword(); // calls my method to read the password without showing it on the console
             if (password == passwords[userIndex]) // checks if the password is correct
             {
                 isPinCorrect = true; // if the password is correct, the user can withdraw money
@@ -292,9 +292,33 @@ static void DepositWithdrawMoney(string[][] accounts, decimal[][] accountBalance
         if (!isPinCorrect) // if the user has tried 3 times and the password is still incorrect
         {
             Console.WriteLine("För många felaktiga försök. Åtgärden har avbrutits.");
-            Console.WriteLine("\nTryck på valfri tangent för att återgå till menyval");
+            Console.WriteLine("\nTryck på enter för att återgå till menyval");
             Console.ReadKey();
         }
         return isPinCorrect; // returns if the password is correct or not
+    }
+    static string ReadPassword() // method to read the password with * instead of showing the password
+    {
+        string password = "";
+        ConsoleKeyInfo key; 
+
+        do
+        {
+            key = Console.ReadKey(intercept: true); // intercepts the key to not show it on the console
+            if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)  // if the key is not backspace or enter
+            {
+                password += key.KeyChar;  // add the key to the password
+                Console.Write("*"); // show * instead of the key
+            }
+            else if (key.Key == ConsoleKey.Backspace && password.Length > 0) // if the key is backspace and the password length is greater than 0
+            {
+                password = password.Substring(0, password.Length - 1); // remove the last character from the password
+                Console.Write("\b \b");  // remove the * from the console
+            }
+        }
+        while (key.Key != ConsoleKey.Enter);  
+
+        Console.WriteLine();
+        return password; // return the password
     }
 }
