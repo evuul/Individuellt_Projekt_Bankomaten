@@ -81,33 +81,42 @@ class Program
             Console.WriteLine("2. Överföring mellan konton");
             Console.WriteLine("3. Insättning & uttag");
             Console.WriteLine("4. Logga ut");
-            if (int.TryParse(Console.ReadLine(), out int choice)) // reads the user input and checks if it's an integer
+
+            string input = Console.ReadLine();
+            if (int.TryParse(input, out int choice)) // reads the user input and checks if it's an integer
             {
-                switch (choice)
+                if (choice >= 1 && choice <= 4) // checks if the user input is between 1 and 4
                 {
-                    case 1:
-                        ShowAccounts(accounts, accountBalances, currentUserIndex, usernames);
-                        break;
-                    case 2:
-                        TransferMoney(accounts, accountBalances, currentUserIndex);
-                        break;
-                    case 3:
-                        DepositWithdrawMoney(accounts, accountBalances, currentUserIndex, passwords);
-                        break;
-                    case 4:
-                        Console.WriteLine("Tack för att du använde bankomaten!");
-                        loggedIn = false; // logs out the user
-                        break;
-                    default:
-                        Console.WriteLine("Felaktigt val, försök igen!");
-                        break;
+                    switch (choice)
+                    {
+                        case 1:
+                            ShowAccounts(accounts, accountBalances, currentUserIndex, usernames);
+                            break;
+                        case 2:
+                            TransferMoney(accounts, accountBalances, currentUserIndex);
+                            break;
+                        case 3:
+                            DepositWithdrawMoney(accounts, accountBalances, currentUserIndex, passwords);
+                            break;
+                        case 4:
+                            Console.WriteLine("Tack för att du använde bankomaten!");
+                            loggedIn = false; // logs out the user
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Felaktigt val, försök igen!");
                 }
             }
             else
             {
                 Console.WriteLine("Felaktigt val, försök igen!");
             }
+            Console.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+            Console.ReadKey();
         }
+        
     }
     static void ShowAccounts(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] usernames) // method to show the accounts and balances
     {
