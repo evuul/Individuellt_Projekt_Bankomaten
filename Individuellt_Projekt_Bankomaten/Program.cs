@@ -81,11 +81,12 @@ class Program
             Console.WriteLine("2. Överföring mellan konton");
             Console.WriteLine("3. Insättning & uttag");
             Console.WriteLine("4. Logga ut");
+            Console.WriteLine("5. Avsluta programmet");
 
             string input = Console.ReadLine();
             if (int.TryParse(input, out int choice)) // reads the user input and checks if it's an integer
             {
-                if (choice >= 1 && choice <= 4) // checks if the user input is between 1 and 4
+                if (choice >= 1 && choice <= 5) // checks if the user input is between 1 and 4
                 {
                     switch (choice)
                     {
@@ -101,6 +102,19 @@ class Program
                         case 4:
                             Console.WriteLine("Tack för att du använde bankomaten!");
                             loggedIn = false; // logs out the user
+                            break;
+                        case 5:
+                            Console.WriteLine("Är du säker på att du vill avsluta programmet? Ange \"ja\" för att avsluta annars återgår du till huvudmenyn.");
+                            string answer = Console.ReadLine().ToLower();
+                            if (answer == "ja")
+                            {
+                                Console.WriteLine("Avslutar programet");
+                                Environment.Exit(0); // exits the program
+                            }
+                            else
+                            {
+                                Console.WriteLine("Återgår till huvudmenyn");
+                            }
                             break;
                     }
                 }
