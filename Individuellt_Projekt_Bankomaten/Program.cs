@@ -165,7 +165,7 @@ class Program
         input = Console.ReadLine();
         while (!int.TryParse(input, out toAccount) || toAccount < 1 || toAccount > accounts[userIndex].Length || toAccount == fromAccount + 1) // loop until the user enters a valid account number
         {
-            Console.WriteLine("Ogiltigt val. Du kan inte välja samma konto att överföra pengar till. Försök igen.");
+            Console.WriteLine("Ogiltigt val, Försök igen.");
             input = Console.ReadLine();
         }
         toAccount--; // subtracts 1 from the input to get the correct index
