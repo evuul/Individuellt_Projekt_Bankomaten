@@ -127,10 +127,7 @@ class Program
             {
                 Console.WriteLine("Felaktigt val, försök igen!");
             }
-            Console.WriteLine("\nTryck på valfri tangent för att fortsätta...");
-            Console.ReadKey();
         }
-        
     }
     static void ShowAccounts(string[][] accounts, decimal[][] accountBalances, int userIndex, string[] usernames) // method to show the accounts and balances
     {
