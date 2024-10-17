@@ -118,14 +118,6 @@ class Program
                             break;
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Felaktigt val, försök igen!");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Felaktigt val, försök igen!");
             }
         }
     }
